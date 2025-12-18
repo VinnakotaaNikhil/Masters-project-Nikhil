@@ -7,7 +7,7 @@
 # Replace with your real values
 account_name = "stgsyntheticdata"        # storage account name
 container_name = "raw"                   # your ADLS container name
-account_key = "qbSJum0asirUIMUzS1AZgyCDwEVqGiU8DJSik7YR3bOfDxOviOfs7ZcZnhkILaIvX+BlMFdL4BvQ+ASt6IyXlw=="
+account_key = "qbSJum0asirUIMUzS1AZgyCDwEVqGiU8DJSik7YR3bOfDxOvX+BlMFdL4BvQ+ASt6IyXlw=="
  # from Azure Portal -> Access keys
 
 # Configure Spark for ADLS access
