@@ -1,0 +1,122 @@
+{
+    "name": "raw",
+    "properties": {
+        "activities": [
+            {
+                "name": "Synthetic data generation",
+                "type": "DatabricksNotebook",
+                "dependsOn": [
+                    {
+                        "activity": "If Master Accounts to be generated",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "notebookPath": "/Users/nikhil07sn@gmail.com/Financial_synthetic_data_v3"
+                },
+                "linkedServiceName": {
+                    "referenceName": "adb_finance",
+                    "type": "LinkedServiceReference"
+                }
+            },
+            {
+                "name": "If Master Accounts to be generated",
+                "type": "IfCondition",
+                "dependsOn": [
+                    {
+                        "activity": "If delta tables to be dropped",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "userProperties": [],
+                "typeProperties": {
+                    "expression": {
+                        "value": "@pipeline().parameters.PoolMasterGeneration",
+                        "type": "Expression"
+                    },
+                    "ifTrueActivities": [
+                        {
+                            "name": "Pool master account generation",
+                            "type": "DatabricksNotebook",
+                            "dependsOn": [],
+                            "policy": {
+                                "timeout": "0.12:00:00",
+                                "retry": 0,
+                                "retryIntervalInSeconds": 30,
+                                "secureOutput": false,
+                                "secureInput": false
+                            },
+                            "userProperties": [],
+                            "typeProperties": {
+                                "notebookPath": "/Users/nikhil07sn@gmail.com/Pool_master_generator"
+                            },
+                            "linkedServiceName": {
+                                "referenceName": "adb_finance",
+                                "type": "LinkedServiceReference"
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "If delta tables to be dropped",
+                "type": "IfCondition",
+                "dependsOn": [],
+                "userProperties": [],
+                "typeProperties": {
+                    "expression": {
+                        "value": "@pipeline().parameters.DropDeltaTables",
+                        "type": "Expression"
+                    },
+                    "ifTrueActivities": [
+                        {
+                            "name": "Drop Delta Tables",
+                            "type": "DatabricksNotebook",
+                            "dependsOn": [],
+                            "policy": {
+                                "timeout": "0.12:00:00",
+                                "retry": 0,
+                                "retryIntervalInSeconds": 30,
+                                "secureOutput": false,
+                                "secureInput": false
+                            },
+                            "userProperties": [],
+                            "typeProperties": {
+                                "notebookPath": "/Users/nikhil07sn@gmail.com/Drop_delta_tables"
+                            },
+                            "linkedServiceName": {
+                                "referenceName": "adb_finance",
+                                "type": "LinkedServiceReference"
+                            }
+                        }
+                    ]
+                }
+            }
+        ],
+        "parameters": {
+            "PoolMasterGeneration": {
+                "type": "bool",
+                "defaultValue": false
+            },
+            "DropDeltaTables": {
+                "type": "bool",
+                "defaultValue": false
+            }
+        },
+        "annotations": [],
+        "lastPublishTime": "2025-11-25T00:57:07Z"
+    },
+    "type": "Microsoft.Synapse/workspaces/pipelines"
+}

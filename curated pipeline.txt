@@ -1,0 +1,30 @@
+{
+    "name": "curated",
+    "properties": {
+        "activities": [
+            {
+                "name": "Curation logic",
+                "type": "DatabricksNotebook",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "notebookPath": "/Users/nikhil07sn@gmail.com/Gold(CURATED)"
+                },
+                "linkedServiceName": {
+                    "referenceName": "adb_finance",
+                    "type": "LinkedServiceReference"
+                }
+            }
+        ],
+        "annotations": [],
+        "lastPublishTime": "2025-11-25T01:48:55Z"
+    },
+    "type": "Microsoft.Synapse/workspaces/pipelines"
+}

@@ -1,0 +1,92 @@
+{
+    "name": "Project Orchestration",
+    "properties": {
+        "activities": [
+            {
+                "name": "Synthetic data generation",
+                "type": "ExecutePipeline",
+                "dependsOn": [],
+                "policy": {
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "raw",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true,
+                    "parameters": {
+                        "PoolMasterGeneration": {
+                            "value": "@pipeline().parameters.PoolMasterGeneration",
+                            "type": "Expression"
+                        },
+                        "DropDeltaTables": {
+                            "value": "@pipeline().parameters.DropDeltaTables",
+                            "type": "Expression"
+                        }
+                    }
+                }
+            },
+            {
+                "name": "Cleansing and Transformations",
+                "type": "ExecutePipeline",
+                "dependsOn": [
+                    {
+                        "activity": "Synthetic data generation",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "cleansed",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                }
+            },
+            {
+                "name": "Final Curation",
+                "type": "ExecutePipeline",
+                "dependsOn": [
+                    {
+                        "activity": "Cleansing and Transformations",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "curated",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                }
+            }
+        ],
+        "parameters": {
+            "PoolMasterGeneration": {
+                "type": "bool",
+                "defaultValue": false
+            },
+            "DropDeltaTables": {
+                "type": "bool",
+                "defaultValue": false
+            }
+        },
+        "annotations": [],
+        "lastPublishTime": "2025-12-01T18:45:02Z"
+    },
+    "type": "Microsoft.Synapse/workspaces/pipelines"
+}
